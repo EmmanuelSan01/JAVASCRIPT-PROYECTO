@@ -1,8 +1,6 @@
 # JAVASCRIPT - PROYECTO
 
-# Reservaciones del Hotel el Rincón del
-
-# Camila
+# Reservaciones del Hotel el Rincón de Camila
 
 **Enunciado**
 
