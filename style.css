@@ -93,6 +93,7 @@ button:hover {
 
 .total-cost {
   font-weight: bold;
+  text-align: end;
   color: #007bff;
   margin-top: 10px;
 }

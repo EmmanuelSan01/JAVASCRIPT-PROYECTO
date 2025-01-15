@@ -114,9 +114,15 @@ class RoomSearch {
         <div class="room-info">Max Guests: ${room.maxGuests}</div>
         <div class="room-info">Cost per night: $${room.costPerNight}</div>
         <div class="total-cost">Total Cost: $${totalCost}</div>
+        <button id="book">Book</button>
       `;
 
       this.roomList.appendChild(roomCard);
+    });
+
+    const bookButton = document.getElementById("book");
+    bookButton.addEventListener("click", function() {
+      window.location.replace("login.html");
     });
   }
 
