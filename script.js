@@ -2,6 +2,8 @@ class RoomSearch {
   constructor() {
     this.form = document.getElementById("searchForm");
     this.roomList = document.getElementById("roomList");
+    this.checkInInput = document.getElementById("checkIn");
+    this.checkOutInput = document.getElementById("checkOut");
     this.baseUrl = "http://localhost:3000";
 
     this.bedCosts = {
@@ -18,7 +20,38 @@ class RoomSearch {
       king: 2,
     };
 
+    this.initializeDateInputs();
     this.form.addEventListener("submit", this.handleSearch.bind(this));
+  }
+
+  initializeDateInputs() {
+    // Get today"s date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
+    
+    // Get tomorrow"s date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowFormatted = tomorrow.toISOString().split("T")[0];
+    
+    // Set min attribute for check-in date
+    this.checkInInput.min = today;
+    
+    // Set min attribute for check-out date
+    this.checkOutInput.min = tomorrowFormatted;
+    
+    // Add event listener to update check-out min date when check-in changes
+    this.checkInInput.addEventListener("change", () => {
+        const selectedCheckIn = new Date(this.checkInInput.value);
+        const minCheckOut = new Date(selectedCheckIn);
+        minCheckOut.setDate(minCheckOut.getDate() + 1);
+        
+        this.checkOutInput.min = minCheckOut.toISOString().split("T")[0];
+        
+        // If check-out date is now invalid, clear it
+        if (new Date(this.checkOutInput.value) <= selectedCheckIn) {
+            this.checkOutInput.value = "";
+        }
+    });
   }
 
   calculateRoomCapacity(beds) {
@@ -60,69 +93,48 @@ class RoomSearch {
 
   async handleSearch(event) {
     event.preventDefault();
-
-    const checkIn = document.getElementById("checkIn").value;
-    const checkOut = document.getElementById("checkOut").value;
+    
+    const checkIn = this.checkInInput.value;
+    const checkOut = this.checkOutInput.value;
     const guests = parseInt(document.getElementById("guests").value);
-
-    if (!this.validateDates(checkIn, checkOut)) {
-      this.showError(
-        "Please select valid dates. Check-out must be after check-in."
-      );
-      return;
-    }
 
     const rooms = await this.fetchRooms();
     const availableRooms = this.filterAndSortRooms(rooms, guests);
     this.displayResults(availableRooms, checkIn, checkOut);
   }
 
-  validateDates(checkIn, checkOut) {
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    return start < end;
-  }
-
   filterAndSortRooms(rooms, guests) {
-    const filteredRooms = rooms.filter((room) => room.maxGuests >= guests);
+    // Filter rooms by guest capacity
+    const filteredRooms = rooms.filter(room => room.maxGuests >= guests);
+    
+    // Sort by price in ascending order
     return filteredRooms.sort((a, b) => a.costPerNight - b.costPerNight);
   }
 
   displayResults(rooms, checkIn, checkOut) {
     this.roomList.innerHTML = "";
-
+    
     if (rooms.length === 0) {
-      this.showError("No rooms available for the selected criteria.");
-      return;
+        this.showError("No rooms available for the selected criteria.");
+        return;
     }
 
-    rooms.forEach((room) => {
-      const totalCost = this.calculateTotalCost(
-        room.costPerNight,
-        checkIn,
-        checkOut
-      );
-      const bedInfo = room.beds
-        .map((bed) => `${bed.count} ${bed.size}`)
-        .join(", ");
-
-      const roomCard = document.createElement("div");
-      roomCard.className = "room-card";
-      roomCard.innerHTML = `
-        <h3>Room ${room.id}</h3>
-        <div class="room-info">Beds: ${bedInfo}</div>
-        <div class="room-info">Max Guests: ${room.maxGuests}</div>
-        <div class="room-info">Cost per night: $${room.costPerNight}</div>
-        <div class="total-cost">Total Cost: $${totalCost}</div>
-        <button id="book">Book</button>
-      `;
-
-      this.roomList.appendChild(roomCard);
-    });
-
-    const bookButton = document.getElementById("book");
-    bookButton.addEventListener("click", function() {
-      window.location.replace("login.html");
+    rooms.forEach(room => {
+        const totalCost = this.calculateTotalCost(room.costPerNight, checkIn, checkOut);
+        const bedInfo = room.beds.map(bed => `${bed.count} ${bed.size}`).join(", ");
+        
+        const roomCard = document.createElement("div");
+        roomCard.className = "room-card";
+        roomCard.innerHTML = `
+            <h3>Room ${room.id}</h3>
+            <div class="room-info">Beds: ${bedInfo}</div>
+            <div class="room-info">Max Guests: ${room.maxGuests}</div>
+            <div class="room-info">Cost per night: $${room.costPerNight}</div>
+            <div class="total-cost">Total Cost: $${totalCost}</div>
+            <button onclick="window.location.href='booking.html?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${room.maxGuests}&totalCost=${totalCost}'">See more</button>
+        `;
+        
+        this.roomList.appendChild(roomCard);
     });
   }
 
@@ -131,6 +143,7 @@ class RoomSearch {
   }
 }
 
+// Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
   new RoomSearch();
 });
