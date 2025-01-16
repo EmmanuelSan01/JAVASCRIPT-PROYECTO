@@ -7,90 +7,113 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 16px;
-            line-height: 1.4;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            padding: 20px;
+            line-height: 1.6;
         }
 
-        .main-container {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 16px;
-            height: calc(100vh - 32px);
-            overflow: hidden;
+        .top-container {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 40px;
         }
 
-        .left-section {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .image-container {
+            flex: 1;
         }
 
         .room-image {
             width: 100%;
-            height: 45vh;
+            height: 600px;
             object-fit: cover;
             border-radius: 8px;
         }
 
-        .booking-info {
-            background-color: #e9ecef;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .room-info {
+        .reservation-container {
             flex: 1;
+            padding: 24px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .cost-info {
-            font-weight: bold;
+        .room-title {
+            font-size: 2em;
+            color: #333;
+            margin: 0;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .bed-info {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .mattress-title {
+            font-size: 1.5em;
+            color: #333;
+            margin: 0;
+            margin-top: 16px;
+        }
+
+        .mattress-infographic {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+
+        .price-container {
+            background-color: #e9ecef;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: auto;
+        }
+
+        .total-price {
+            font-size: 1.5em;
             color: #28a745;
+            font-weight: bold;
+            margin-bottom: 16px;
         }
 
         .reserve-button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 1.1em;
+            padding: 16px 32px;
+            font-size: 1.2em;
             border-radius: 8px;
             cursor: pointer;
+            width: 100%;
             transition: background-color 0.3s;
-            min-width: 150px;
         }
 
         .reserve-button:hover {
             background-color: #0056b3;
         }
 
-        .info-sections {
+        .room-details {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            overflow-y: auto;
-            padding-right: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
         }
 
         .section {
             background-color: #f8f9fa;
-            padding: 16px;
+            padding: 24px;
             border-radius: 8px;
         }
 
         .section h2 {
             color: #333;
-            margin: 0 0 12px 0;
-            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 16px;
             border-bottom: 2px solid #007bff;
             padding-bottom: 8px;
         }
@@ -99,79 +122,83 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 8px;
         }
 
         .section li {
-            padding: 4px 0;
-            font-size: 0.95em;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        @media (max-width: 968px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
-                height: calc(100vh - 32px);
-                overflow-y: auto;
+        .section li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 1024px) {
+            .top-container {
+                flex-direction: column;
             }
 
             .room-image {
-                height: 35vh;
-            }
-
-            .info-sections {
-                overflow-y: visible;
-            }
-
-            .section ul {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                height: 400px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="left-section">
-            <div id="room-image-container">
-                <!-- Image will be inserted here by JavaScript -->
-            </div>
-
-            <div id="booking-info" class="booking-info">
-                <!-- Booking information will be inserted here by JavaScript -->
-            </div>
+    <div class="top-container">
+        <div class="image-container" id="room-image-container">
+            <!-- Image will be inserted here by JavaScript -->
         </div>
 
-        <div class="info-sections">
-            <div class="section">
-                <h2>Hotel Services</h2>
-                <ul>
-                    <li>✓ Continental breakfast</li>
-                    <li>✓ Outdoor pool</li>
-                    <li>✓ Sauna and steam room</li>
-                    <li>✓ Free parking</li>
-                    <li>✓ Jacuzzi</li>
-                    <li>✓ Restaurants</li>
-                    <li>✓ Minibar</li>
-                </ul>
+        <div class="reservation-container">
+            <div id="room-info">
+                <!-- Room info will be inserted here by JavaScript -->
             </div>
+            
+            <h3 class="mattress-title">Mattress Sizes</h3>
+            <img 
+                src="https://cdn.shopify.com/s/files/1/2161/9741/files/mattress_sizes_infographic_updated_2023-06_82af5fd8-d6d6-43e8-a447-8078464d104a_600x600.jpg" 
+                alt="Mattress Sizes Infographic" 
+                class="mattress-infographic"
+            >
+            
+            <div class="price-container">
+                <div id="price-info">
+                    <!-- Price will be inserted here by JavaScript -->
+                </div>
+                <button class="reserve-button">BOOK NOW</button>
+            </div>
+        </div>
+    </div>
 
-            <div class="section">
-                <h2>Room Amenities</h2>
-                <ul>
-                    <li>✓ Air conditioning</li>
-                    <li>✓ Medical assistance</li>
-                    <li>✓ Coffee maker</li>
-                    <li>✓ Safe box</li>
-                    <li>✓ Mini fridge</li>
-                    <li>✓ Free parking</li>
-                    <li>✓ Clothes iron</li>
-                    <li>✓ Wake-up service</li>
-                    <li>✓ 55" flat-screen TV</li>
-                    <li>✓ Free Wi-Fi</li>
-                </ul>
-            </div>
+    <div class="room-details">
+        <div class="section">
+            <h2>Hotel Services</h2>
+            <ul>
+                <li>Complimentary continental breakfast</li>
+                <li>Access to the outdoor pool</li>
+                <li>Access to the steam room</li>
+                <li>Access to the sauna</li>
+                <li>Free parking</li>
+                <li>Restaurants</li>
+                <li>Jacuzzi</li>
+                <li>Minibar</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Room Amenities</h2>
+            <ul>
+                <li>Air conditioning</li>
+                <li>Medical assistance</li>
+                <li>Coffee maker</li>
+                <li>Safe box</li>
+                <li>Mini fridge</li>
+                <li>Clothes iron</li>
+                <li>Wake-up service</li>
+                <li>55" flat-screen TV</li>
+                <li>Free Wi-Fi</li>
+            </ul>
         </div>
     </div>
 
@@ -205,20 +232,22 @@
                     <img src="${imageUrl}" alt="Room ${roomId}" class="room-image">
                 `;
 
-                // Display bed information and booking details
+                // Display room and bed information
                 const bedInfo = roomData.beds.map(bed => 
                     `${bed.count} ${bed.size} bed${bed.count > 1 ? 's' : ''}`
                 ).join(', ');
                 
-                document.getElementById('booking-info').innerHTML = `
-                    <div class="room-info">
-                        <div><strong>Room ${roomId}</strong> - ${bedInfo}</div>
-                        <div class="cost-info">Total Cost: $${totalCost}</div>
-                    </div>
-                    <button class="reserve-button">Book Now</button>
+                document.getElementById('room-info').innerHTML = `
+                    <h1 class="room-title">Room ${roomId}</h1>
+                    <div class="bed-info">${bedInfo}</div>
                 `;
 
-                // Add event listener to the newly created button
+                // Display price information
+                document.getElementById('price-info').innerHTML = `
+                    <div class="total-price">Total Cost: $${totalCost}</div>
+                `;
+
+                // Add event listener to the reserve button
                 document.querySelector('.reserve-button').addEventListener('click', () => {
                     alert('Reservation successful! Thank you for choosing our hotel.');
                     window.location.href = 'index.html';
