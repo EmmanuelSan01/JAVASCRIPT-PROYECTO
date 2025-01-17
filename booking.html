@@ -166,7 +166,7 @@
                 <div id="price-info">
                     <!-- Price will be inserted here by JavaScript -->
                 </div>
-                <button class="reserve-button">BOOK NOW</button>
+                <button class="reserve-button" id="book-now-button">BOOK NOW</button>
             </div>
         </div>
     </div>
@@ -235,14 +235,14 @@
                     <img src="${imageUrl}" alt="Room ${roomId}" class="room-image">
                 `;
 
-                // Display room and bed information
+                // Display bed information and room title
                 const bedInfo = roomData.beds.map(bed => 
                     `${bed.count} ${bed.size} bed${bed.count > 1 ? 's' : ''}`
                 ).join(', ');
                 
                 document.getElementById('room-info').innerHTML = `
-                    <h1 class="room-title">Room ${roomId}</h1>
-                    <div class="bed-info">${bedInfo}</div>
+                    <h2 class="room-title">Room ${roomId}</h2>
+                    <p class="bed-info">${bedInfo}</p>
                 `;
 
                 // Display price information
@@ -250,10 +250,12 @@
                     <div class="total-price">Total Cost: $${totalCost}</div>
                 `;
 
-                // Add event listener to the reserve button
-                document.querySelector('.reserve-button').addEventListener('click', () => {
-                    alert('Reservation successful! Thank you for choosing our hotel.');
-                    window.location.href = 'index.html';
+                // Add event listener to the book now button
+                document.getElementById('book-now-button').addEventListener('click', () => {
+                    // Construct the URL with query parameters
+                    const registrationUrl = `registration.html?roomId=${roomId}&checkIn=${checkIn}&checkOut=${checkOut}&totalCost=${totalCost}`;
+                    // Navigate to the registration page
+                    window.location.href = registrationUrl;
                 });
             } catch (error) {
                 console.error('Error fetching room data:', error);
