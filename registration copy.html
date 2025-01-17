@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
     <style>
-        body {
+                body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -96,7 +96,7 @@
 <body>
     <div class="container">
         <h1>Create Account</h1>
-        <form id="registrationForm">
+        <form  id="registrationForm">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" required>
@@ -110,12 +110,12 @@
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password"  required>
             </div>
             
             <div class="form-group">
                 <label for="repeatPassword">Repeat Password</label>
-                <input type="password" name="repeatPassword" id="repeatPassword" required>
+                <input type="password" name="repeatPassword" id="repeatPassword"  required>
                 <div id="passwordError" class="error-message">Passwords do not match.</div>
             </div>
 
@@ -128,62 +128,32 @@
     </div>
 
     <script>
-        function registerUser() {
-            document.getElementById("registrationForm").addEventListener("submit", (event) => {
-                event.preventDefault();
-
-                // Reset error messages
-                document.getElementById('emailError').style.display = 'none';
-                document.getElementById('passwordError').style.display = 'none';
-
-                // Get form values and validate passwords
-                const password = document.getElementById("password").value;
-                const repeatPassword = document.getElementById("repeatPassword").value;
-
-                // Check if passwords match
-                if (password !== repeatPassword) {
-                    document.getElementById('passwordError').style.display = 'block';
-                    return;
-                }
-
-                const formData = {
-                    name: document.getElementById("name").value,
-                    email: document.getElementById("email").value,
-                    password: password
-                };
-
-                fetch("http://localhost:3000/users/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 409) {
-                            // Email already exists
-                            document.getElementById('emailError').style.display = 'block';
-                            throw new Error('Email already registered');
-                        }
-                        throw new Error('Registration failed');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const queryString = urlParams.toString();    
-                    window.location.href = `login.html${queryString ? '?' + queryString : ''}`;
-                })
-                .catch(error => {
-                    if (error.message !== 'Email already registered') {
-                        alert("Error creating user: " + error.message);
-                    }
-                });
-            });
-        }
-
-        window.onload = registerUser;
+        function registerUser(){
+        document.getElementById("registrationForm").addEventListener("submit", (event)=>{
+            event.preventDefault();
+    
+            const  formData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,            
+            };
+            fetch("http://localhost:3000/users/", {
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json",
+                },
+                body:JSON.stringify(formData)
+            })
+            .then((Response)=> Response.json())
+            .then((data) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryString = urlParams.toString();    
+                window.location.href = `login.html${queryString ? '?' + queryString : ''}`;
+            })
+            .catch((error) => alert("error al crear usuario") + error)
+        })
+    }
+    window.onload = registerUser;
     </script>
 </body>
 </html>
