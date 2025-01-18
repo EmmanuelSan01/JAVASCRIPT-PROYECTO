@@ -320,6 +320,11 @@
     }
   ],
   "users": [
-
+    {
+      "name": "e",
+      "email": "e@g",
+      "password": "12",
+      "id": 1
+    }
   ]
 }
