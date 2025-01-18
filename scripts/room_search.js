@@ -62,9 +62,11 @@ class RoomSearch {
     try {
       const response = await fetch(this.baseUrl);
       if (!response.ok) throw new Error("Failed to fetch rooms");
-
+  
       const text = await response.text();
-      const rooms = JSON.parse(text);
+      const data = JSON.parse(text);
+
+      const rooms = Array.isArray(data) ? data : data.rooms || [];
   
       return rooms.map((room) => ({
         ...room,
@@ -76,7 +78,7 @@ class RoomSearch {
       this.showError("Failed to load room data. Please try again.");
       return [];
     }
-  }  
+  }
   
   calculateTotalCost(costPerNight, checkIn, checkOut) {
     const start = new Date(checkIn);
