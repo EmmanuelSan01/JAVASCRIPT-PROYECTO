@@ -119,26 +119,27 @@
                 <div id="passwordError" class="error-message">Passwords do not match.</div>
             </div>
 
-            <button type="submit" class="button">Sign Up</button>
+            <button type="submit" class="button">Sign up</button>
         </form>
 
         <div class="login-link">
-            Already registered? <a href="login.html">Log In</a>
+            Already registered? <a href="login.html">Log in</a>
         </div>
     </div>
 
     <script>
         function registerUser() {
-            document.getElementById("registrationForm").addEventListener("submit", (event) => {
+            document.getElementById("registrationForm").addEventListener("submit", async (event) => {
                 event.preventDefault();
 
                 // Reset error messages
                 document.getElementById('emailError').style.display = 'none';
                 document.getElementById('passwordError').style.display = 'none';
 
-                // Get form values and validate passwords
+                // Get form values
                 const password = document.getElementById("password").value;
                 const repeatPassword = document.getElementById("repeatPassword").value;
+                const email = document.getElementById("email").value;
 
                 // Check if passwords match
                 if (password !== repeatPassword) {
@@ -146,40 +147,45 @@
                     return;
                 }
 
-                const formData = {
-                    name: document.getElementById("name").value,
-                    email: document.getElementById("email").value,
-                    password: password
-                };
+                try {
+                    // First, check if email exists
+                    const checkResponse = await fetch(`http://localhost:3000/users?email=${email}`);
+                    const existingUsers = await checkResponse.json();
+                    console.log(existingUsers.length);
 
-                fetch("http://localhost:3000/users/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 409) {
-                            // Email already exists
-                            document.getElementById('emailError').style.display = 'block';
-                            throw new Error('Email already registered');
-                        }
+                    if (existingUsers && existingUsers.length > 0) {
+                        // Email already exists
+                        document.getElementById('emailError').style.display = 'block';
+                        return;
+                    }
+
+                    // If email doesn't exist, proceed with registration
+                    const formData = {
+                        name: document.getElementById("name").value,
+                        email: email,
+                        password: password
+                    };
+
+                    const registerResponse = await fetch("http://localhost:3000/users/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!registerResponse.ok) {
                         throw new Error('Registration failed');
                     }
-                    return response.json();
-                })
-                .then(data => {
+
+                    // Registration successful, redirect to login
                     const urlParams = new URLSearchParams(window.location.search);
                     const queryString = urlParams.toString();    
                     window.location.href = `login.html${queryString ? '?' + queryString : ''}`;
-                })
-                .catch(error => {
-                    if (error.message !== 'Email already registered') {
-                        alert("Error creating user: " + error.message);
-                    }
-                });
+
+                } catch (error) {
+                    alert("Error creating user: " + error.message);
+                }
             });
         }
 
