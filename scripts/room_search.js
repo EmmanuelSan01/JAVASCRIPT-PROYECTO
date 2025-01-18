@@ -4,7 +4,7 @@ class RoomSearch {
     this.roomList = document.getElementById("roomList");
     this.checkInInput = document.getElementById("checkIn");
     this.checkOutInput = document.getElementById("checkOut");
-    this.baseUrl = "https://render-deploy-nodejs-rd1x.onrender.com/";
+    this.baseUrl = "https://render-deploy-nodejs-rd1x.onrender.com";
     this.bedCosts = {
       twin: 100,
       full: 150,
@@ -60,10 +60,12 @@ class RoomSearch {
 
   async fetchRooms() {
     try {
-      const response = await fetch(`${this.baseUrl}/rooms`);
+      const response = await fetch(this.baseUrl);
       if (!response.ok) throw new Error("Failed to fetch rooms");
-      const rooms = await response.json();
 
+      const text = await response.text();
+      const rooms = JSON.parse(text);
+  
       return rooms.map((room) => ({
         ...room,
         maxGuests: this.calculateRoomCapacity(room.beds),
@@ -74,8 +76,8 @@ class RoomSearch {
       this.showError("Failed to load room data. Please try again.");
       return [];
     }
-  }
-
+  }  
+  
   calculateTotalCost(costPerNight, checkIn, checkOut) {
     const start = new Date(checkIn);
     const end = new Date(checkOut);
