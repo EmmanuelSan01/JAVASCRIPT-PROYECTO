@@ -4,7 +4,7 @@ class RoomSearch {
     this.roomList = document.getElementById("roomList");
     this.checkInInput = document.getElementById("checkIn");
     this.checkOutInput = document.getElementById("checkOut");
-    this.baseUrl = "http://localhost:3000";
+    this.baseUrl = "https://render-deploy-nodejs-rd1x.onrender.com/";
     this.bedCosts = {
       twin: 100,
       full: 150,
