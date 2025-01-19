@@ -142,7 +142,7 @@ class RoomSearch {
         <div class="room-info">Max Guests: ${room.maxGuests}</div>
         <div class="room-info">Cost per night: $${room.costPerNight}</div>
         <div class="total-cost">Total Cost: $${totalCost}</div>
-        <button onclick="window.location.href='booking.html?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${room.maxGuests}&totalCost=${totalCost}'">See more</button>
+        <button onclick="window.location.href='room_details.html?roomId=${room.id}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests.value}&totalCost=${totalCost}'">See more</button>
       `;
 
       this.roomList.appendChild(roomCard);

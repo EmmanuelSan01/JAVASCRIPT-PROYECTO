@@ -58,7 +58,7 @@ function loginUser() {
       console.log('Login successful - user stored in session:', user);
       
       if (urlParams.toString()) {
-        window.location.href = `booking.html?${urlParams.toString()}`;
+        window.location.href = `room_details.html?${urlParams.toString()}`;
       } else {
         window.location.href = "index.html";
       }

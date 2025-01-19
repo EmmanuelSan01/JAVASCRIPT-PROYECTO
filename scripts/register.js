@@ -62,7 +62,7 @@ function registerUser() {
       // Register the user
       let registerResponse;
       if (isLocal) {
-        registerResponse = await fetch("http://localhost:3000/users/", {
+        registerResponse = await fetch("http://localhost:3000/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
