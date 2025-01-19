@@ -4,7 +4,6 @@ class RoomSearch {
     this.roomList = document.getElementById("roomList");
     this.checkInInput = document.getElementById("checkIn");
     this.checkOutInput = document.getElementById("checkOut");
-    this.baseUrl = "https://render-deploy-nodejs-rd1x.onrender.com";
     this.bedCosts = {
       twin: 100,
       full: 150,
@@ -60,25 +59,42 @@ class RoomSearch {
 
   async fetchRooms() {
     try {
-      const response = await fetch(this.baseUrl);
-      if (!response.ok) throw new Error("Failed to fetch rooms");
+      // Intentar conexión con el servidor local
+      const localUrl = "http://localhost:3000";
+      const response = await fetch(`${localUrl}/rooms`);
+      if (!response.ok) throw new Error("Local server not available");
   
-      const text = await response.text();
-      const data = JSON.parse(text);
-
-      const rooms = Array.isArray(data) ? data : data.rooms || [];
-  
+      // Si la respuesta del servidor local es válida
+      const rooms = await response.json();
       return rooms.map((room) => ({
         ...room,
         maxGuests: this.calculateRoomCapacity(room.beds),
         costPerNight: this.calculateRoomCost(room.beds),
       }));
     } catch (error) {
-      console.error("Error fetching rooms:", error);
-      this.showError("Failed to load room data. Please try again.");
-      return [];
+      console.warn("Local server not found, switching to remote server:", error);
+  
+      // Si falla, usar el servidor remoto
+      try {
+        const response = await fetch("https://render-deploy-nodejs-rd1x.onrender.com");
+        if (!response.ok) throw new Error("Failed to fetch rooms from remote server");
+  
+        const text = await response.text();
+        const data = JSON.parse(text);
+        const rooms = Array.isArray(data) ? data : data.rooms || [];
+  
+        return rooms.map((room) => ({
+          ...room,
+          maxGuests: this.calculateRoomCapacity(room.beds),
+          costPerNight: this.calculateRoomCost(room.beds),
+        }));
+      } catch (remoteError) {
+        console.error("Error fetching rooms from remote server:", remoteError);
+        this.showError("Failed to load room data. Please try again.");
+        return [];
+      }
     }
-  }
+  }  
   
   calculateTotalCost(costPerNight, checkIn, checkOut) {
     const start = new Date(checkIn);
