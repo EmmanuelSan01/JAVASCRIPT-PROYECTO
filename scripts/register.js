@@ -5,7 +5,7 @@ async function tryFetch(localUrl) {
     return { response, isLocal: true };
   } catch (error) {
     console.warn("Local server not found, switching to remote server:", error);
-    const response = await fetch("https://render-deploy-nodejs-rd1x.onrender.com");
+    const response = await fetch(`${window.location.origin}/data/db.json`);
     if (!response.ok) throw new Error("Remote server not available");
     return { response, isLocal: false };
   }
@@ -74,7 +74,7 @@ function registerUser() {
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
         
         // Get remote users for ID generation
-        const response = await fetch("https://render-deploy-nodejs-rd1x.onrender.com");
+        const response = await fetch(`${window.location.origin}/data/db.json`);
         const text = await response.text();
         const data = JSON.parse(text);
         const remoteUsers = Array.isArray(data) ? data : data.users || [];

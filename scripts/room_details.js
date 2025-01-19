@@ -43,7 +43,7 @@ async function storeBooking(isLocalServer) {
       const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
       
       // Fetch remote bookings for ID generation
-      const response = await fetch('https://render-deploy-nodejs-rd1x.onrender.com');
+      const response = await fetch(`${window.location.origin}/data/db.json`);
       const text = await response.text();
       const data = JSON.parse(text);
       const remoteBookings = Array.isArray(data) ? data : data.bookings || [];
@@ -118,7 +118,7 @@ async function fetchRoomData() {
     let isLocalServer = false;
 
     try {
-      const response = await fetch(`https://render-deploy-nodejs-rd1x.onrender.com`);
+      const response = await fetch(`${window.location.origin}/data/db.json`);
 
       if (!response.ok) throw new Error("Failed to fetch room data from remote server");
 

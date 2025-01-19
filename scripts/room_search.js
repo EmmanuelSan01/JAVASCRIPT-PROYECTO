@@ -60,8 +60,7 @@ class RoomSearch {
   async fetchRooms() {
     try {
       // Intentar conexión con el servidor local
-      const localUrl = "http://localhost:3000";
-      const response = await fetch(`${localUrl}/rooms`);
+      const response = await fetch("http://localhost:3000/rooms");
       if (!response.ok) throw new Error("Local server not available");
   
       // Si la respuesta del servidor local es válida
@@ -76,7 +75,7 @@ class RoomSearch {
   
       // Si falla, usar el servidor remoto
       try {
-        const response = await fetch("https://render-deploy-nodejs-rd1x.onrender.com");
+        const response = await fetch(`${window.location.origin}/data/db.json`);
         if (!response.ok) throw new Error("Failed to fetch rooms from remote server");
   
         const text = await response.text();
