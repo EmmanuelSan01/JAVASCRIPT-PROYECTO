@@ -75,7 +75,9 @@ class RoomSearch {
   
       // Si falla, usar el servidor remoto
       try {
-        const response = await fetch(`${window.location.origin}/data/db.json`);
+        const currentUrl = window.location.href;
+        const newUrl = currentUrl.replace(/\/pages\/.*$/, "/data/db.json");
+        const response = await fetch(newUrl);
         if (!response.ok) throw new Error("Failed to fetch rooms from remote server");
   
         const text = await response.text();
