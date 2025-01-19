@@ -27,13 +27,11 @@ function loginUser() {
       let user = null;
       
       if (isLocal) {
-        // Check local server
         const users = await response.json();
         if (users && users.length > 0) {
           user = users[0];
         }
       } else {
-        // Check local storage
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
         user = storedUsers.find(u => u.email === email);
         
@@ -52,8 +50,7 @@ function loginUser() {
       }
 
       const urlParams = new URLSearchParams(window.location.search);
-      
-      // Store successful login in session storage
+
       sessionStorage.setItem('loggedInUser', JSON.stringify(user));
       console.log('Login successful - user stored in session:', user);
       

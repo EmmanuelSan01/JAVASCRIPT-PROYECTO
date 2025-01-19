@@ -19,7 +19,6 @@ async function storeBooking(isLocalServer) {
   };
 
   if (isLocalServer) {
-    // Send booking to local server
     try {
       const response = await fetch('http://localhost:3000/bookings', {
         method: 'POST',
@@ -37,27 +36,20 @@ async function storeBooking(isLocalServer) {
       throw error;
     }
   } else {
-    // Store in local storage for remote server
     try {
-      // Get existing bookings from local storage
       const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-      
-      // Fetch remote bookings for ID generation
       const currentUrl = window.location.href;
       const newUrl = currentUrl.replace(/\/pages\/.*$/, "/data/db.json");
       const response = await fetch(newUrl);
       const text = await response.text();
       const data = JSON.parse(text);
       const remoteBookings = Array.isArray(data) ? data : data.bookings || [];
-      
-      // Generate new ID based on both remote and stored bookings
       const allBookings = [...remoteBookings, ...storedBookings];
       const newbooking = {
         ...bookingData,
         id: Math.max(...allBookings.map(r => r.id || 0), 0) + 1
       };
       
-      // Add to stored bookings and save back to local storage
       storedBookings.push(newbooking);
       localStorage.setItem('bookings', JSON.stringify(storedBookings));
     } catch (error) {

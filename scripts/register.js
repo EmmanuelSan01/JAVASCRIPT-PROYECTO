@@ -30,7 +30,6 @@ function registerUser() {
     }
 
     try {
-      // Check for existing users
       const { response: checkResponse, isLocal } = await tryFetch(
         `http://localhost:3000/users?email=${email}`
       );
@@ -40,13 +39,11 @@ function registerUser() {
       if (isLocal) {
         existingUsers = await checkResponse.json();
       } else {
-        // Check local storage first
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
         const remoteText = await checkResponse.text();
         const remoteData = JSON.parse(remoteText);
         const remoteUsers = Array.isArray(remoteData) ? remoteData : remoteData.users || [];
         
-        // Combine remote users and stored users
         existingUsers = [...remoteUsers, ...storedUsers].filter(user => user.email === email);
       }
 
@@ -61,7 +58,6 @@ function registerUser() {
         password: password,
       };
 
-      // Register the user
       let registerResponse;
       if (isLocal) {
         registerResponse = await fetch("http://localhost:3000/users", {
@@ -72,29 +68,22 @@ function registerUser() {
           body: JSON.stringify(formData),
         });
       } else {
-        // Get existing users from local storage
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-        
-        // Get remote users for ID generation
         const currentUrl = window.location.href;
         const newUrl = currentUrl.replace(/\/pages\/.*$/, "/data/db.json");
         const response = await fetch(newUrl);
         const text = await response.text();
         const data = JSON.parse(text);
         const remoteUsers = Array.isArray(data) ? data : data.users || [];
-        
-        // Generate new ID based on both remote and stored users
         const allUsers = [...remoteUsers, ...storedUsers];
         const newUser = {
           ...formData,
           id: Math.max(...allUsers.map(u => u.id || 0), 0) + 1
         };
-        
-        // Add to stored users and save back to local storage
+
         storedUsers.push(newUser);
         localStorage.setItem('users', JSON.stringify(storedUsers));
-        
-        // Simulate successful response
+
         registerResponse = new Response(JSON.stringify({ success: true }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }

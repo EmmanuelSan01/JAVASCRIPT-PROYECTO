@@ -59,11 +59,9 @@ class RoomSearch {
 
   async fetchRooms() {
     try {
-      // Intentar conexión con el servidor local
       const response = await fetch("http://localhost:3000/rooms");
       if (!response.ok) throw new Error("Local server not available");
   
-      // Si la respuesta del servidor local es válida
       const rooms = await response.json();
       return rooms.map((room) => ({
         ...room,
@@ -73,7 +71,6 @@ class RoomSearch {
     } catch (error) {
       console.warn("Local server not found, switching to remote server:", error);
   
-      // Si falla, usar el servidor remoto
       try {
         const currentUrl = window.location.href;
         const newUrl = currentUrl.replace(/\/pages\/.*$/, "/data/db.json");
