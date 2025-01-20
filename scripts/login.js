@@ -51,7 +51,7 @@ function loginUser() {
       if (urlParams.toString()) {
         window.location.href = `room_details.html?${urlParams.toString()}`;
       } else {
-        window.location.href = "index.html";
+        window.location.href = "bookings.html";
       }
     } catch (error) {
       console.error("Login error:", error);
