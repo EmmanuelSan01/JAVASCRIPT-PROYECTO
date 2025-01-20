@@ -20,9 +20,7 @@ function loginUser() {
     const password = document.getElementById("password").value;
 
     try {
-      const { response, isLocal } = await tryFetch(
-        `http://localhost:3000/users?email=${email}`
-      );
+      const { response, isLocal } = await tryFetch(`http://localhost:3000/users?email=${email}`);
 
       let user = null;
       
@@ -34,9 +32,6 @@ function loginUser() {
       } else {
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
         user = storedUsers.find(u => u.email === email);
-        
-        console.log('Checking local storage for user:', email);
-        console.log('Found user:', user);
       }
 
       if (!user) {
@@ -52,7 +47,6 @@ function loginUser() {
       const urlParams = new URLSearchParams(window.location.search);
 
       sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-      console.log('Login successful - user stored in session:', user);
       
       if (urlParams.toString()) {
         window.location.href = `room_details.html?${urlParams.toString()}`;

@@ -12,9 +12,7 @@ async function cancelBooking(bookingId, cardElement) {
     let cancelledOnServer = false;
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/bookings/${bookingId}`,
-        {
+      const response = await fetch(`http://localhost:3000/bookings/${bookingId}`, {
           method: "DELETE",
         }
       );
@@ -25,33 +23,20 @@ async function cancelBooking(bookingId, cardElement) {
         throw new Error("Failed to cancel booking on server");
       }
     } catch (serverError) {
-      console.log("Server unavailable, updating localStorage");
-
       const storedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-      console.log("Before deletion:", storedBookings);
-
-      const bookingExists = storedBookings.some(
-        (booking) => booking.id === parseInt(bookingId)
-      );
+      const bookingExists = storedBookings.some((booking) => booking.id === parseInt(bookingId));
       if (!bookingExists) {
         throw new Error(`Booking ${bookingId} not found in localStorage`);
       }
 
-      const updatedBookings = storedBookings.filter(
-        (booking) => booking.id !== parseInt(bookingId)
-      );
-      console.log("After deletion:", updatedBookings);
+      const updatedBookings = storedBookings.filter((booking) => booking.id !== parseInt(bookingId));
 
       localStorage.setItem("bookings", JSON.stringify(updatedBookings));
 
       const verifyBookings = JSON.parse(localStorage.getItem("bookings"));
-      if (
-        verifyBookings.some((booking) => booking.id === parseInt(bookingId))
-      ) {
+      if (verifyBookings.some((booking) => booking.id === parseInt(bookingId))) {
         throw new Error("Failed to delete booking from localStorage");
       }
-
-      console.log("Booking successfully deleted from localStorage");
     }
 
     cardElement.style.transition = "opacity 0.3s";
@@ -96,14 +81,9 @@ async function displayBookings() {
     const userBookings = bookings.filter((res) => res.userId === userId);
     displayBookingsList(userBookings);
   } catch (error) {
-    console.log("Server not available, using localStorage");
-
     try {
       const storedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-      console.log("Reading from localStorage:", storedBookings);
-      const userBookings = storedBookings.filter(
-        (res) => res.userId === userId
-      );
+      const userBookings = storedBookings.filter((res) => res.userId === userId);
       displayBookingsList(userBookings);
     } catch (localStorageError) {
       console.error("Error reading from localStorage:", localStorageError);
@@ -158,11 +138,11 @@ bookingsContainer.innerHTML = bookingsList;
 }
 
 document.getElementById("bookings-container").addEventListener("click", async (event) => {
-    if (event.target.classList.contains("cancel-button")) {
-      const bookingId = event.target.dataset.bookingId;
-      const cardElement = event.target.closest(".booking-card");
-      await cancelBooking(bookingId, cardElement);
-    }
-  });
+  if (event.target.classList.contains("cancel-button")) {
+    const bookingId = event.target.dataset.bookingId;
+    const cardElement = event.target.closest(".booking-card");
+    await cancelBooking(bookingId, cardElement);
+  }
+});
 
 displayBookings();
