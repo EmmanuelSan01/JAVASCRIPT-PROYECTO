@@ -16,7 +16,7 @@ const bookingData = {
 const getUrlParameters = (data) => {
   return Object.entries(data)
     .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+    .join("&");
 };
 
 const fetchFromServer = async (url, options = {}) => {
@@ -33,14 +33,14 @@ const getImageUrl = (totalBeds) => {
 
 const formatBedInfo = (beds) => {
   if (!Array.isArray(beds)) {
-    return '';
+    return "";
   }
 
   return beds
     .map(bed => {
       let bedDescription = `${bed.count} ${bed.size} bed`;
       if (bed.count > 1) {
-        bedDescription += 's';
+        bedDescription += "s";
       }
       return bedDescription;
     })
@@ -48,22 +48,22 @@ const formatBedInfo = (beds) => {
 };
 
 const storeBookingLocal = async (bookingData) => {
-  const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+  const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
   const fullBookingData = {
     ...bookingData,
     userId: loggedInUser.id
   };
 
-  return fetchFromServer('http://localhost:3000/bookings', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  return fetchFromServer("http://localhost:3000/bookings", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(fullBookingData)
   });
 };
 
 const storeBookingRemote = async (bookingData) => {
-  const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-  const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+  const storedBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
   const currentUrl = window.location.href;
   const dbUrl = currentUrl.replace(/\/pages\/.*$/, "/data/db.json");
   
@@ -88,7 +88,7 @@ const storeBookingRemote = async (bookingData) => {
   };
   
   storedBookings.push(newBooking);
-  localStorage.setItem('bookings', JSON.stringify(storedBookings));
+  localStorage.setItem("bookings", JSON.stringify(storedBookings));
 };
 
 const updateUI = (roomData, bookingData) => {
@@ -111,7 +111,7 @@ const updateUI = (roomData, bookingData) => {
 };
 
 const handleBooking = async (isLocalServer, bookingData) => {
-  const loggedInUser = sessionStorage.getItem('loggedInUser');
+  const loggedInUser = sessionStorage.getItem("loggedInUser");
   
   if (loggedInUser) {
     try {
@@ -120,10 +120,10 @@ const handleBooking = async (isLocalServer, bookingData) => {
       } else {
         await storeBookingRemote(bookingData);
       }
-      window.location.href = 'bookings.html';
+      window.location.href = "bookings.html";
     } catch (error) {
-      alert('Failed to store booking. Please try again.');
-      console.error('Booking error:', error);
+      alert("Failed to store booking. Please try again.");
+      console.error("Booking error:", error);
     }
   } else {
     window.location.href = `register.html?${getUrlParameters(bookingData)}`;
@@ -172,7 +172,7 @@ const fetchRoomData = async (bookingData) => {
     } catch (remoteError) {
       console.error("Error fetching room data from remote server:", remoteError);
       document.getElementById("room-info").innerHTML = `
-        <p class="error-message">Sorry, we couldn't load the room information. Please try again later.</p>
+        <p class="error-message">Sorry, we couldn"t load the room information. Please try again later.</p>
       `;
     }
   }

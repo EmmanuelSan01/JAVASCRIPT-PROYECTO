@@ -43,7 +43,7 @@ const getAllUsers = async (isLocal, response) => {
     return await response.json();
   }
 
-  const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
   const remoteUsers = await parseServerData(response);
   return [...remoteUsers, ...storedUsers];
 };
@@ -67,7 +67,7 @@ const createUser = async (formData, isLocal) => {
     });
   }
 
-  const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+  const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
   const remoteUsers = await parseServerData(await fetchFromServer(getRemoteUrl()));
   const allUsers = [...remoteUsers, ...storedUsers];
   
@@ -77,11 +77,11 @@ const createUser = async (formData, isLocal) => {
   };
 
   storedUsers.push(newUser);
-  localStorage.setItem('users', JSON.stringify(storedUsers));
+  localStorage.setItem("users", JSON.stringify(storedUsers));
 
   return new Response(JSON.stringify({ success: true }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { "Content-Type": "application/json" }
   });
 };
 

@@ -30,7 +30,7 @@ function loginUser() {
           user = users[0];
         }
       } else {
-        const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
         user = storedUsers.find(u => u.email === email);
       }
 
@@ -46,7 +46,7 @@ function loginUser() {
 
       const urlParams = new URLSearchParams(window.location.search);
 
-      sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+      sessionStorage.setItem("loggedInUser", JSON.stringify(user));
       
       if (urlParams.toString()) {
         window.location.href = `room_details.html?${urlParams.toString()}`;
