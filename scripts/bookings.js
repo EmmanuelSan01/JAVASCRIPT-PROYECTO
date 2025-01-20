@@ -108,10 +108,10 @@ async function displayBookings() {
     } catch (localStorageError) {
       console.error("Error reading from localStorage:", localStorageError);
       bookingsContainer.innerHTML = `
-          <div class="error">
-            Sorry, we couldn't load your bookings. Please try again later.
-          </div>
-        `;
+        <div class="error">
+          Sorry, we couldn't load your bookings. Please try again later.
+        </div>
+      `;
     }
   }
 }

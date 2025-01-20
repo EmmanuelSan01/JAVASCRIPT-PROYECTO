@@ -42,7 +42,15 @@ function registerUser() {
         const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
         const remoteText = await checkResponse.text();
         const remoteData = JSON.parse(remoteText);
-        const remoteUsers = Array.isArray(remoteData) ? remoteData : remoteData.users || [];
+        let remoteUsers;
+
+        if (Array.isArray(remoteData)) {
+          remoteUsers = remoteData;
+        } else if (remoteData.users) {
+          remoteUsers = remoteData.users;
+        } else {
+          remoteUsers = [];
+        }
         
         existingUsers = [...remoteUsers, ...storedUsers].filter(user => user.email === email);
       }
@@ -74,7 +82,16 @@ function registerUser() {
         const response = await fetch(newUrl);
         const text = await response.text();
         const data = JSON.parse(text);
-        const remoteUsers = Array.isArray(data) ? data : data.users || [];
+        let remoteUsers;
+
+        if (Array.isArray(data)) {
+          remoteUsers = data;
+        } else if (data.users) {
+          remoteUsers = data.users;
+        } else {
+          remoteUsers = [];
+        }
+
         const allUsers = [...remoteUsers, ...storedUsers];
         const newUser = {
           ...formData,

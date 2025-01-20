@@ -72,7 +72,15 @@ async function fetchRooms() {
 
       const text = await response.text();
       const data = JSON.parse(text);
-      const rooms = Array.isArray(data) ? data : data.rooms || [];
+      let rooms;
+
+      if (Array.isArray(data)) {
+        rooms = data;
+      } else if (data.rooms) {
+        rooms = data.rooms;
+      } else {
+        rooms = [];
+      }
 
       return enhanceRoomsData(rooms);
     } catch (remoteError) {
